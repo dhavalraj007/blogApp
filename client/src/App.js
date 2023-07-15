@@ -28,7 +28,10 @@ function App() {
           path="/edit-blog/:id"
           element={isLogin ? <EditBlog /> : <Navigate to="/login" />}
         />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={!isLogin ? <Login /> : <Navigate to="/blogs" />}
+        />
         <Route path="/register" element={<Register />} />
       </Routes>
     </>

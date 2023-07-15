@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../utils/Tokens";
 
 const EditBlog = () => {
   const { id } = useParams();
@@ -16,10 +17,16 @@ const EditBlog = () => {
   const userId = useSelector((state) => state.userInfo._id);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.put(`/blogs/update-blog/${id}`, {
-      ...inputs,
-      user: userId,
-    });
+    const { data } = await axios.put(
+      `/blogs/update-blog/${id}`,
+      {
+        ...inputs,
+        user: userId,
+      },
+      {
+        headers: { Authorization: `Bearer ${await getAccessToken()}` },
+      }
+    );
     if (data?.success) {
       alert(data.message);
       navigate("/my-blogs");
@@ -35,7 +42,9 @@ const EditBlog = () => {
   useEffect(() => {
     const getBlog = async () => {
       try {
-        const { data } = await axios.get(`/blogs/blog/${id}`);
+        const { data } = await axios.get(`/blogs/blog/${id}`, {
+          headers: { Authorization: `Bearer ${await getAccessToken()}` },
+        });
         if (data?.success) {
           setInputs({
             title: data.blog.title,

@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../redux/store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { clearTokens, getRefreshToken } from "../utils/Tokens";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -19,9 +21,15 @@ const Header = () => {
   const isLogin = useSelector((state) => state.isLogin);
   const [value, setValue] = useState(0);
 
-  const hadleLogout = () => {
+  const hadleLogout = async () => {
     try {
-      dispatch(authActions.logout);
+      await axios.delete("/user/logout", {
+        refresh_token: getRefreshToken(),
+      });
+      clearTokens();
+      console.log("after clearing tokens");
+      dispatch(authActions.logout());
+      dispatch(authActions.clearUserInfo());
       alert("Logout succesfully!");
       navigate("/login");
     } catch (error) {

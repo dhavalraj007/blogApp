@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard.js";
 import { useSelector } from "react-redux";
 import CreatePostButton from "../components/CreatePostButton.js";
+import { getAccessToken } from "../utils/Tokens.js";
 
 const MyBlogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -10,7 +11,9 @@ const MyBlogs = () => {
   const isLogin = useSelector((state) => state.isLogin);
   const getBlogs = async (id) => {
     try {
-      const { data } = await axios.get(`/blogs/user-blogs/${id}`);
+      const { data } = await axios.get(`/blogs/user-blogs/${id}`, {
+        headers: { Authorization: `Bearer ${await getAccessToken()}` },
+      });
       console.log(data);
       if (data?.success) {
         setBlogs(data.blogs);

@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../redux/store";
-import { jwt } from "jsonwebtoken";
+import { decodeToken } from "react-jwt";
+import { setAccessToken, setRefreshToken } from "../utils/Tokens";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -28,10 +29,16 @@ const Login = () => {
         password: inputs.password,
       });
       if (data.success) {
-        localStorage.setItem("blogApp_access_token", data.access_token);
-        localStorage.setItem("blogApp_refresh_token", data.refresh_token);
+        const decoded = decodeToken(data.access_token);
+        if (!decoded) {
+          console.log("token not valid!");
+          return;
+        }
+
+        setAccessToken(data.access_token);
+        setRefreshToken(data.refresh_token);
         dispatch(authActions.login());
-        dispatch(authActions.storeUserInfo(data));
+        dispatch(authActions.storeUserInfo(decoded));
         alert("user login succefully");
         navigate("/");
       } else {
@@ -68,6 +75,7 @@ const Login = () => {
             type="email"
             value={inputs.email}
             onChange={handleChange}
+            sx={{ width: 350 }}
             required
           />
           <TextField
@@ -77,6 +85,7 @@ const Login = () => {
             type="password"
             value={inputs.password}
             onChange={handleChange}
+            sx={{ width: 350 }}
             required
           />
           <Button

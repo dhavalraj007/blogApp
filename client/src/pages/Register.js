@@ -59,6 +59,7 @@ const Register = () => {
             type="text"
             value={inputs.name}
             onChange={handleChange}
+            sx={{ width: 350 }}
             required
           />
           <TextField
@@ -68,6 +69,7 @@ const Register = () => {
             type="email"
             value={inputs.email}
             onChange={handleChange}
+            sx={{ width: 350 }}
             required
           />
           <TextField
@@ -77,6 +79,7 @@ const Register = () => {
             type="password"
             value={inputs.password}
             onChange={handleChange}
+            sx={{ width: 350 }}
             required
           />
           <Button

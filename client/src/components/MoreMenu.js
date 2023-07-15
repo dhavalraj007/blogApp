@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getAccessToken } from "../utils/Tokens";
 
 const MoreMenu = ({ id }) => {
   const [open, setOpen] = React.useState(false);
@@ -26,7 +27,9 @@ const MoreMenu = ({ id }) => {
   };
   const handleDelete = async () => {
     try {
-      const { data } = await axios.delete(`/blogs/delete-blog/${id}`);
+      const { data } = await axios.delete(`/blogs/delete-blog/${id}`, {
+        headers: { Authorization: `Bearer ${await getAccessToken()}` },
+      });
       if (data?.success) {
         alert(data.message);
         navigate("/my-blogs");

@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../utils/Tokens";
 
 const CreateBlog = () => {
   const navigate = useNavigate();
@@ -14,10 +15,16 @@ const CreateBlog = () => {
   const userId = useSelector((state) => state.userInfo._id);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post("blogs/create-blog", {
-      ...inputs,
-      user: userId,
-    });
+    const { data } = await axios.post(
+      "blogs/create-blog",
+      {
+        ...inputs,
+        user: userId,
+      },
+      {
+        headers: { Authorization: `Bearer ${await getAccessToken()}` },
+      }
+    );
     if (data?.success) {
       alert(data.message);
       navigate("/my-blogs");

@@ -11,7 +11,7 @@ const authenticateToken = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
-router.get("/all-blogs", authenticateToken, getAllBlogs);
+router.get("/all-blogs", getAllBlogs);
 router.get("/blog/:id", authenticateToken, getBlogById);
 router.get("/user-blogs/:id", authenticateToken, getBlogsByUser);
 router.post("/create-blog", authenticateToken, createBlog);
